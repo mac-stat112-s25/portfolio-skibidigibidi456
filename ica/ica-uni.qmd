@@ -153,3 +153,4 @@ ggplot(hikes, aes(x = elevation)) +
 
 Good note: make a line break after each + and an indent after the first line of code
 
+recovered ica 1
