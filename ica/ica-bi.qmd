@@ -3,3 +3,71 @@ title: "Bivariate Viz"
 ---
 
 Use this file for practice with the **bivariate viz** in-class activity.  Refer to the class website for details.
+# Import data
+survey <- read.csv("https://hash-mac.github.io/stat112site-s25/data/survey.csv")
+
+
+```{r}
+
+survey <- read.csv("https://hash-mac.github.io/stat112site-s25/data/survey.csv")
+
+```
+
+
+
+# How many students have now filled out the survey?
+49 students 
+
+# What type of variables do we have?
+categorical and quantitative
+
+
+# Attach a package needed to use the ggplot function
+
+```{r}
+
+library(ggplot2)
+
+
+
+```
+
+
+
+
+# Make a ggplot
+
+
+```{r}
+
+
+ggplot(survey, aes(x = hangout )) +
+  geom_bar(color = "orange", fill = "blue")  +
+  labs(x = "Hangout location", y = "Students") +
+  theme_minimal()
+  
+  
+```
+
+Now I am making and interpreting two graphs of the students favorite temperature in celcius.
+```{r}
+
+ggplot(survey, aes(x = fav_temp_c )) +
+  geom_histogram(color = "white", binwidth = 10) +
+  labs(x = "Favorite temperature (Celcius)", y = "Number of students")
+
+
+
+```
+
+```{r}
+
+ggplot(survey, aes(x = fav_temp_c)) + 
+  geom_density(color = "blue", fill = "orange") + 
+  labs(x = "favorite temperature C", y = "Students")
+
+
+```
+
+The plots are unimodal with a peak around 23 celcius. Both have outliers that are over 50 and below around 10 celcius.The data is skewed left with a leftward tail.
+
