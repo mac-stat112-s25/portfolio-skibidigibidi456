@@ -71,3 +71,323 @@ ggplot(survey, aes(x = fav_temp_c)) +
 
 The plots are unimodal with a peak around 23 celcius. Both have outliers that are over 50 and below around 10 celcius.The data is skewed left with a leftward tail.
 
+
+Exercises
+
+```{r}
+# Load data
+elections <- read.csv("https://mac-stat.github.io/data/election_2020_county.csv")
+
+# Check it out
+head(elections)
+```
+
+
+Now I am going to make a graph
+
+```{r}
+ggplot(elections, aes(x = winner_20)) +
+      geom_density()
+
+```
+
+
+Scatterplot part of ICA bivariate
+
+# Set up the plotting frame
+# How does this differ than the frame for our histogram of repub_pct_20 alone?
+
+
+
+```{r}
+
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point()
+
+
+
+```
+
+# Change the shape of the points
+# What happens if you change the shape to another number?
+
+
+```{r}
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point(shape = 3)
+
+
+```
+
+
+# YOU TRY: Modify the code to make the points "orange"
+# NOTE: Try to anticipate if "color" or "fill" will be useful here. Then try both.
+
+
+```{r}
+
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point(color = "orange")
+
+
+```
+
+
+# Add a layer that represents each county by the state it's in
+# Take note of the geom and the info it needs to run!
+
+
+
+```{r}
+
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_text(aes(label = state_abbr))
+
+
+```
+
+
+This is said to add a model smooth to the plot
+
+```{r}
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point(color = "orange" ) +
+  geom_smooth()
+
+```
+
+
+
+This command, method= "lm" gives us the best linear model
+
+
+```{r}
+
+ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+```
+
+
+
+# Scatterplot of repub_pct_20 vs median_rent
+ggplot(elections, aes(y = repub_pct_20, x = median_rent )) +
+  geom_point(color = "orange") +
+```{r}
+
+ggplot(elections, aes(y = repub_pct_20, x = median_rent )) +
+  geom_point(color = "orange") 
+
+
+```
+  
+
+
+# Scatterplot of repub_pct_20 vs median_age
+
+
+```{r}
+
+
+ggplot(elections, aes(y = repub_pct_20, x = median_age )) +
+  geom_point(color = "orange") 
+
+```
+It appears that median rent is the best predictor. Those with less rent voted mostly for the Republican candidate in 2020. 
+
+
+
+```{r}
+
+
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_point()
+
+
+```
+
+
+
+
+```{r}
+
+# Side-by-side violin plots
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_violin()
+
+```
+
+
+
+```{r}
+
+
+# Side-by-side boxplots (defined below)
+ggplot(elections, aes(y = repub_pct_20, x = historical)) +
+  geom_boxplot()
+
+```
+These plots above are able to show us more information about the numerical quantitities
+
+
+ggplot(elections, aes(x = repub_pct_20)) +
+  geom_density()
+```{r}
+
+
+
+ggplot(elections, aes(x = repub_pct_20)) +
+  geom_density()
+
+```
+  
+  
+```{r}
+
+# Name two "bad" things about this plot
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density()
+```
+  
+  
+```{r}
+
+# What does scale_fill_manual do?
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density() +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+
+```
+  
+```{r}
+
+# What does alpha = 0.5 do?
+# Play around with different values of alpha, between 0 and 1
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+
+```
+  
+```{r}
+
+# What does facet_wrap do?!
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_density() +
+  scale_fill_manual(values = c("blue", "purple", "red")) +
+  facet_wrap(~ historical)
+
+
+```
+
+
+```{r}
+
+# Let's try a similar grouping strategy with a histogram instead of density plot.
+# Why is this terrible?
+ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
+  geom_histogram(color = "white") +
+  scale_fill_manual(values = c("blue", "purple", "red"))
+
+
+```
+
+
+```{r}
+
+
+
+
+
+```
+
+
+
+
+```{r}
+
+# Plot 1: adjust this to recreate the top plot
+ggplot(elections, aes(x = historical)) +
+  geom_bar()
+
+
+```
+
+
+
+
+
+```{r}
+
+# Plot 2: adjust this to recreate the bottom plot
+ggplot(elections, aes(x = winner_20)) +
+  geom_bar()
+
+
+```
+
+
+
+```{r}
+
+
+
+# A stacked bar plot
+# How are the "historical" and "winner_20" variables mapped to the plot, i.e. what roles do they play?
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar()
+
+```
+
+
+```{r}
+
+
+# A faceted bar plot
+ggplot(elections, aes(x = winner_20)) +
+  geom_bar() +
+  facet_wrap(~ historical)
+
+```
+
+
+```{r}
+
+# A side-by-side bar plot
+# Note the new argument to geom_bar
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar(position = "dodge")
+
+
+```
+
+
+
+```{r}
+
+
+# A proportional bar plot
+# Note the new argument to geom_bar
+ggplot(elections, aes(x = historical, fill = winner_20)) +
+  geom_bar(position = "fill")
+
+```
+
+
+```{r}
+
+
+weather <- read.csv("https://mac-stat.github.io/data/weather_3_locations.csv")
+
+
+```
+
+
+ICA BIVARIATE COMPLETED
