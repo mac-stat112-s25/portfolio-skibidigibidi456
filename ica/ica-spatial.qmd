@@ -3,3 +3,303 @@ title: "Spatial Viz"
 ---
 
 Use this file for practice with the **spatial viz** in-class activity.  Refer to the class website for details.
+```{r}
+
+# Load tidyverse package for plotting and wrangling
+library(tidyverse)
+
+# Import the data and only keep 2 addresses
+energy <- read.csv("https://mac-stat.github.io/data/MacNaturalGas.csv") |> 
+  mutate(date = as.Date(paste0(month, "/1/", year), "%m/%d/%Y")) |> 
+  filter(address != "c")
+
+# Check it out
+head(energy)
+
+```
+
+```{r}
+
+library(codebook)
+
+```
+```{r}
+
+ggplot(energy, aes(x = therms, fill = address)) +
+         geom_density(alpha = 0.5)
+```
+
+
+There is a range from a little over 450 to 0 in therms. Address B is more represented in terms of low spending
+
+
+```{r}
+
+ggplot(energy, aes(x = date, y = therms, color = address)) +
+  geom_line() 
+
+
+```
+Aporaching the end of the year the prices rise, at the start of the year the prices decrease until halfway through, where they plateu, and then they increase approaching the end of the year again. This is most likely in line with the rising and decreasing temperatures of the seasons.
+
+
+
+Now we will examine to see how rennovation changes therms
+
+
+```{r}
+
+ggplot(energy, aes(x = renovated, y = therms)) + 
+    geom_boxplot() +
+    facet_wrap(~ address)
+  
+
+
+```
+
+It looks like rennovation increased the amount of thermal energy used.
+
+
+
+```{r}
+
+# A density plot isn't very helpful for comparing typical therms in this example!
+ggplot(energy, aes(x = therms, fill = renovated)) + 
+  geom_density(alpha = 0.5) + 
+  facet_wrap(~ address)
+
+
+```
+I am going to try control for the outside temperature. Maybe the surveyed renovated properties are from colder places.
+
+
+```{r}
+
+ggplot(energy, aes(y = hdd, x= renovated)) +
+  geom_boxplot() + 
+  facet_wrap(~ address)
+
+
+```
+Most of the renovated properties are at places with a higher hdd, meaning that they are at colder temperatures and need more therms to be heated.
+
+
+Now we will make a plot that controls for hdd
+
+```{r}
+
+# When controlling for outside temps (via hdd), energy use decreased post-renovation
+ggplot(energy, aes(y = therms, x = hdd, color = renovated)) + 
+  geom_point(alpha = 0.5) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_wrap(~ address)
+  
+
+```
+
+It appears there is less energy use in the renovated homes
+
+```{r}
+
+install.packages("leaflet")
+
+```
+```{r}
+
+library(leaflet)
+
+```
+```{r}
+
+fave_places <- read.csv("https://hash-mac.github.io/stat112site-s25/data/our_fave_places.csv")
+
+# Check it out
+head(fave_places)
+
+```
+```{r}
+
+# Load the leaflet package
+library(leaflet)
+
+# Just a plotting frame
+leaflet(data = fave_places)
+
+```
+```{r}
+
+# Now what do we have?
+leaflet(data = fave_places) |> 
+  addTiles()
+
+```
+
+
+```{r}
+
+# Now what do we have?
+# longitude and latitude refer to the variables in our data
+leaflet(data = fave_places) |> 
+  addTiles() |> 
+  addMarkers(lng = ~longitude, lat = ~latitude)
+
+```
+
+Awesome we have markers based on latitude and longitude on a map that we can zoom in and out of!!!!! :3
+
+
+```{r}
+
+# Since we named them "longitude" and "latitude", the function
+# automatically recognizes these variables. No need to write them!
+leaflet(data = fave_places) |> 
+  addTiles() |> 
+  addMarkers()
+
+
+```
+```{r}
+
+install.packages("gplots")
+
+```
+
+```{r}
+
+library(gplots)
+
+
+```
+```{r}
+
+# Load package needed to change color
+library(gplots)
+
+# We can add colored circles instead of markers at each location
+leaflet(data = fave_places) |> 
+  addTiles() |> 
+  addCircles(color = col2hex("red"))
+
+
+```
+
+
+
+```{r}
+
+# We can change the background
+# Mark locations with yellow dots
+# And connect the dots, in their order in the dataset, with green lines
+# (These green lines don't mean anything here, but would if this were somebody's travel path!)
+leaflet(data = fave_places) |>
+  addProviderTiles("USGS") |>
+  addCircles(weight = 10, opacity = 1, color = col2hex("yellow")) |>
+  addPolylines(
+    lng = ~longitude,
+    lat = ~latitude,
+    color = col2hex("green")
+  )
+
+
+```
+
+
+```{r}
+
+# Import starbucks location data
+starbucks <- read.csv("https://mac-stat.github.io/data/starbucks.csv")
+
+```
+
+```{r}
+
+# Don't worry about the syntax
+starbucks_mn <- starbucks |>   
+  filter(Country == "US", State.Province == "MN")
+
+
+```
+
+```{r}
+
+leaflet(starbucks_mn) |> 
+  addMarkers() |> 
+  addTiles() 
+
+
+```
+
+```{r}
+
+
+ggplot(starbucks, aes(x = Longitude, y = Latitude)) +
+  geom_point(size = 0.2, alpha = 0.2)
+
+```
+
+
+```{r}
+install.packages("rnaturalearth")
+```
+
+```{r}
+
+# Load the package
+library(rnaturalearth)
+
+# Get info about country boundaries across the world
+# in a "sf" or simple feature format
+world_boundaries <- ne_countries(returnclass = "sf")
+
+```
+
+```{r}
+
+# What does this code produce?
+# What geom are we using for the point map?
+ggplot(world_boundaries) + 
+  geom_sf()
+
+```
+
+```{r}
+
+# Load package needed to change map theme
+library(mosaic)
+
+# Add a point for each Starbucks
+# NOTE: The Starbucks info is in our starbucks data, not world_boundaries
+# How does this change how we use geom_point?!
+ggplot(world_boundaries) + 
+  geom_sf() + 
+  geom_point(
+    data = starbucks,
+    aes(x = Longitude, y = Latitude),
+    alpha = 0.3, size = 0.2, color = "darkgreen"
+  ) +
+  theme_map()
+
+
+
+```
+
+According to this map, starbucks has a multinational presence, especially in the US on the coasts, in Japan, in the UK, in China, in France and also in Germany.
+
+
+```{r}
+
+# We'll learn this syntax soon! Don't worry about it now.
+starbucks_cma <- starbucks |> 
+  filter(Country %in% c('CA', 'MX', 'US'))
+
+
+
+
+```
+
+
+
+```{r}
+
+```
+
