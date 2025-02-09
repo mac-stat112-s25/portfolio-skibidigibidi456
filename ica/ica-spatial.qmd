@@ -307,10 +307,23 @@ install.packages("rnaturalearthdata")
 
 ```{r}
 
-cma_boundaries <- ne_states(
-  country = c("canada", "mexico", "united states of america"),
-  returnclass = "sf")
+install_rnaturalearthhires()
 
 
 ```
+
+
+```{r}
+
+
+```
+
+```{r}
+
+install.packages("devtools") # I guess you also need this
+devtools::install_github("ropensci/rnaturalearthhires")
+library("rnaturalearth")
+
+```
+
 
