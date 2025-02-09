@@ -301,5 +301,16 @@ starbucks_cma <- starbucks |>
 
 ```{r}
 
+install.packages("rnaturalearthdata")
+
+```
+
+```{r}
+
+cma_boundaries <- ne_states(
+  country = c("canada", "mexico", "united states of america"),
+  returnclass = "sf")
+
+
 ```
 
