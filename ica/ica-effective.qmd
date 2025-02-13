@@ -3,6 +3,22 @@ title: "ica-effective"
 format: html
 ---
 
+
+
+```{r}
+
+library(RColorBrewer)
+
+```
+
+
+```{r}
+
+library(ggplot2)
+
+```
+
+
 ```{r}
 
 library(tidyverse)
@@ -55,9 +71,74 @@ ggplot(weather, aes(y = temp3pm, x = temp9am, color = location)) +
 
 ggplot(weather, aes(x = temp3pm, fill = location)) + 
   geom_density(alpha = 0.5) + 
-  labs(x = "3pm temperature (Celsius)", y = "3am temperature (Celsius)", fig-alt = "Scatterplot of Temperature at 3pm vs Temperature at 9am of three Australian cities, where a higher 3pm temperature correlates with a higher 9am temperature.") 
+  labs(x = "3pm temperature (Celsius)", y = "3am temperature (Celsius)", alt = "Scatterplot of Temperature at 3pm vs Temperature at 9am of three Australian cities, where a higher 3pm temperature correlates with a higher 9am temperature.") 
   
 
 
 
 ```
+
+
+```{r}
+
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = repub_20_categories)) +
+  geom_map(map = county_map) +
+  scale_fill_manual(values = rev(brewer.pal(10, "RdBu")), name = "% Republican") +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right") + 
+  coord_equal()
+
+```
+
+```{r}
+
+# Get the latitude and longitude coordinates of county boundaries
+library(socviz)
+data(county_map) 
+
+# Check it out
+head(county_map)
+
+
+```
+```{r}
+
+
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = repub_20_categories)) +
+  geom_map(map = county_map) +
+  scale_fill_manual(values = rev(brewer.pal(10, "RdBu")), name = "% Republican") +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right") + 
+  coord_equal()
+
+```
+
+```{r}
+
+install.packages("viridis")
+
+
+```
+```{r}
+
+library(viridis)
+
+```
+
+
+
+```{r}
+
+
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = repub_20_categories)) +
+  geom_map(map = county_map) +
+  scale_fill_viridis(option = "mako", direction = -1) +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right") + 
+  coord_equal()
+
+```
+

@@ -735,4 +735,6 @@ ggplot(elections_by_counties, aes(map_id = county_fips, fill = median_age)) +
 
 
 ```
+
+
 Spatial ICA complete
