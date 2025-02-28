@@ -3,3 +3,38 @@ title: "Quadvariate Viz"
 ---
 
 Use this file to generate a professional looking **quadvariate** visualization.  The visualization will not perfect the first time but you are expected to improve on it throughout the semester especially after covering advanced topics such as effective viz.
+
+
+```{r}
+#load needed packages
+library(ggplot2)
+library(tidyverse)
+
+
+```
+
+
+```{r}
+
+# Import data
+weather <- read.csv("https://mac-stat.github.io/data/weather_3_locations.csv") |> 
+  mutate(date = as.Date(date))  
+
+```
+
+
+```{r}
+#| fig-cap: "Scatterplots of the temperatures of locations with the x axis representing the location's temperature at 9:00 a.m. and the y axis representing the location's temperature at 3:00 p.m..The colors red green and blue for the points represent Hobart, Uluru and Wollongong respectively. The scatterplots are separtated by if there was rainfall that day (Yes) if there was not rainfall that day (No) and if it cannot be said if there was or was not rainfall that day (NA)"
+#| fig-alt: "Scatterplots of the temperatures of locations with the x axis representing the location's temperature at 9:00 a.m. and the y axis representing the location's temperature at 3:00 p.m..The colors red green and blue for the points represent Hobart, Uluru and Wollongong respectively. The scatterplots are separtated by if there was rainfall that day (Yes) if there was not rainfall that day (No) and if it cannot be said if there was or was not rainfall that day (NA). No rain seems to correlate with higher temperatures, and Uluru, with the highest temperatures, was most represented in the no rainfall scatterplot. There are more days without rainfall than with rainfall across locations."
+
+ggplot(weather, aes(y = temp3pm, x = temp9am, color = location)) + 
+  geom_point() +
+  facet_wrap(~ raintoday) +
+  labs(title = "Temperatures at 3am v.s. 9am at Hobart, Uluru, and Wollongong, 
+  Separated By Rainfall (Or lack thereof). ", subtitle = "Source: https://mac-stat.github.io/data/election_2020_county.csv. 
+   Author: bcheggeseth
+   Date: Jun 19, 2024 ", color = "Location of temp. taken", x = "Temperature at 9:00 a.m. (Celcius)", y = "Temperature at 3:00 p.m. (Celcius)")
+  
+
+
+```
