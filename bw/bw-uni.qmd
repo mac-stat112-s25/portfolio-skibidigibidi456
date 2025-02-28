@@ -3,3 +3,39 @@ title: "Univariate Viz"
 ---
 
 Use this file to generate a professional looking **univariate** visualization. The visualization will not perfect the first time but you are expected to improve on it throughout the semester especially after covering advanced topics such as effective viz.
+
+
+
+```{r}
+
+library(ggplot2)
+library(tidyverse)
+
+```
+
+
+```{r}
+
+# Import data
+hikes <- read.csv("https://mac-stat.github.io/data/high_peaks.csv")
+
+```
+
+
+```{r}
+#| fig-cap: "A histogram with an x axis based on the elevation of a mountain, from 3500 to 5000 feet, and a y axis based on the number of people who climbed that mountain, from 0 to 5."
+#| fig-alt: "A histogram with an x axis based on the elevation of a mountain, from 3500 to 5000 feet, and a y axis based on the number of people who climbed that mountain, from 0 to 5. The bars are colored pink and there is a peak at around 4300 feet wtih 5 people having climbed a mountain of that elevation. The graph is skewed right slightly with only 2 people having climbed mountains higher than 5000 ft."
+#| 
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white", fill = "pink") +
+  labs(x = "Elevation of Mountain Climbed (Feet)", y = "Number of People Who Climbed That Mountain", title = "Count of Climbers v.s. Elevation of Mountain", subtitle = "The amount of people (with 1=1 person who has climbed a 
+       
+mountain of a height) who have climbed mountains of various heights (in feet).  
+Author: bcheggeseth 
+Date: Jun 19, 2024. 
+Source: https://mac-stat.github.io/data/high_peaks.csv ")
+
+
+
+```
+
