@@ -58,7 +58,8 @@ library(tidyverse)
 ggplot(elections, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20), fill = historical)) + 
   geom_density_ridges(alpha = 0.5) + 
   labs(y = "state", x = "2020 Republican support (%)", title = "2020 USA Election Republican Support % Density by State", fill = "Historical State Electoral Political Alignment", subtitle = "Color indicates historical political alignment of states, 2020 Republican Support (%) = % of the 
-       vote that was for Republicans. Source: https://mac-stat.github.io/data/election_2020_county.csv. Author: bcheggeseth Date: Jun 19, 2024") + 
+       vote that was for Republicans. Source: https://mac-stat.github.io/data/election_2020_county.csv. 
+       Author: bcheggeseth Date: Jun 19, 2024") + 
   scale_fill_manual(values = c("blue", "purple", "red"))
 
 ```
