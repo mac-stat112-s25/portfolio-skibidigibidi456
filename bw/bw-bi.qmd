@@ -43,16 +43,23 @@ install.packages("forcats")
 library(forcats)
 
 ```
+```{r}
+
+library(tidyverse)
+
+```
 
 
 
 ```{r}
-#| fig-cap: "Density Ridge plots of the U.S.A. states' Republican support percentages with color added to show historical voting alignment"
+#| fig-cap: "Density Ridge plots of the U.S.A. states' Republican support percentages with color added to show historical voting alignment. Author: Torrey Johnson. Date: 2/28/2025"
 #| fig-alt: "Density Ridge plots of the U.S.A. states' Republican support percentages with color added to show historical voting alignment. The upper U.S.A. states are red, and the lower are blue. The historically red states have higher amounts of Republican support percentage. The ridges are all unimodal."
 
 ggplot(elections, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20), fill = historical)) + 
   geom_density_ridges(alpha = 0.5) + 
-  labs(y = "state", x = "2020 Republican support (%)", title = "2020 USA Election Republican Support % Density by State") + 
+  labs(y = "state", x = "2020 Republican support (%)", title = "2020 USA Election Republican Support % Density by State", fill = "Historical State Electoral Political Alignment", subtitle = "Color indicates historical political alignment of states, 2020 Republican Support (%) = % of the 
+       vote that was for Republicans") + 
   scale_fill_manual(values = c("blue", "purple", "red"))
 
 ```
+Finished
