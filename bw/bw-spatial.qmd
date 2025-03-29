@@ -3,3 +3,83 @@ title: "Spatial Viz"
 ---
 
 Use this file to generate a professional looking **spatial** visualization.  The visualization will not perfect the first time but you are expected to improve on it throughout the semester especially after covering advanced topics such as effective viz.
+
+```{r}
+
+elections_by_state <-  read.csv("https://mac-stat.github.io/data/election_2020_by_state.csv")
+elections_by_counties <- read.csv("https://mac-stat.github.io/data/election_2020_county.csv")
+
+```
+
+
+```{r}
+library(socviz)
+data(county_map) 
+library(RColorBrewer)
+states_map <- map_data("state")
+
+```
+
+
+```{r}
+
+# Adds 0's at the beginning of any fips_code that's fewer than 5 numbers long
+
+elections_by_counties <- elections_by_counties |> 
+  mutate(county_fips = as.character(county_fips)) |> 
+  mutate(county_fips = 
+           ifelse(nchar(county_fips) == 4, paste0("0", county_fips), county_fips))
+
+```
+
+
+
+```{r}
+
+
+
+elections_by_state <- elections_by_state |> 
+  filter(state_abbr != "DC") |> 
+  select(state_name, state_abbr, repub_pct_20) |> 
+  mutate(repub_20_categories = 
+           cut(repub_pct_20, 
+               breaks = seq(30, 70, by = 5), 
+               labels = c("30-34", "35-39", "40-44", "45-49",
+                          "50-54", "55-59", "60-64", "65-70"), 
+               include.lowest = TRUE))
+
+elections_by_counties <- elections_by_counties |> 
+  select(state_name, state_abbr, county_name, county_fips,
+          repub_pct_20, median_age, median_rent) |> 
+  mutate(repub_20_categories = 
+           cut(repub_pct_20, 
+               breaks = seq(0, 100, by = 10),
+               labels = c("0-9", "10-19", "20-29", "30-39", "40-49",
+                          "50-59", "60-69", "70-79", "80-89", "90-100"),
+               include.lowest = TRUE))
+
+```
+
+
+
+```{r}
+#| fig-cap: "A map of the contiguous United States of America, with a chloropleth design
+#| to indicate the median age of the population."
+#| fig-alt: "A map of the contiguous United States of America, with a chloropleth design
+#| to indicate the median age of the population. Yellow is the color for the oldest on the gradient scale (60ish years) pink is the middle color and is between 50 and 40 years, and 30 years and below are represented by red. It appears there is much more yellow, representing an older population, towards the West of the country than the East. The areas with the youngest population are in red and they are lower Texas and certain spots of the Midwest and East."
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = median_age)) +
+  geom_map(map = county_map) +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right") + 
+  coord_equal() + 
+  scale_fill_gradientn(name = "Median Age of the Population (Years)", colors = c("red", "pink", "yellow")) +
+  labs(title = "Median Age of the Contiguous U.S.A. Citizens by County", subtitle = "Source: https://mac-stat.github.io/data/election_2020_county.csv. 
+       Author: bcheggeseth Date: Jun 19, 2024")
+
+
+
+
+
+
+```

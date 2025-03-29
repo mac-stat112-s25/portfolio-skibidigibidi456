@@ -1,0 +1,467 @@
+---
+title: "ica-dates"
+format: html
+---
+
+review 
+verb	action
+arrange	arrange the rows according to some column
+filter	filter out or obtain a subset of the rows
+select	select a subset of columns
+mutate	mutate or create a column
+summarize	calculate a numerical summary of a column
+group_by	group the rows by a specified column
+
+```{r}
+
+library(tidyverse)
+penguins <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
+
+# Check it out
+head(penguins)
+
+
+```
+```{r}
+
+ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm, color = sex, shape = species)) +
+  geom_point()
+
+
+```
+
+```{r}
+
+
+# Get data on only Adelie penguins that weigh more than 4700g
+penguins |>
+  filter(body_mass_g > 4700) |>
+  head()
+
+# Get data on penguin body mass only
+# Show just the first 6 rows
+
+penguins |>
+  select(body_mass_g) |>
+  head()
+
+# Sort the penguins from smallest to largest body mass
+# Show just the first 6 rows
+
+penguins |>
+  arrange(body_mass_g)
+
+
+
+# Calculate the average body mass across all penguins
+# Note: na.rm = TRUE removes the NAs from the calculation
+
+penguins |>
+  summarize(mean_body_mass_g =mean(body_mass_g)) |>
+  head()
+
+
+# Calculate the average body mass by species
+#Done below
+
+# Create a new column that records body mass in kilograms, not grams
+# NOTE: there are 1000 g in 1 kg
+# Show just the first 6 rows
+
+penguins |>
+  mutate(body_mass_kg = body_mass_g/1000) |>
+  head()
+
+```
+
+
+```{r}
+
+penguins |>
+  group_by(species) |>
+  summarize( na.rm = TRUE, mean_mass = mean(body_mass_g)) |>
+  head()
+
+
+
+```
+
+```{r}
+
+
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+
+```
+
+```{r}
+
+penguins |>
+  group_by(species) |>
+  summarize (n())
+
+penguins |>
+  count(species)
+
+
+```
+
+```{r}
+
+# Sort Gentoo penguins from biggest to smallest with respect to their 
+# bill length in cm (there are 10 mm in a cm)
+
+penguins |>
+  filter(species == "Gentoo") |>
+  mutate(bill_length_cm = bill_length_mm/10) |>
+  arrange(desc(bill_length_cm))
+
+
+```
+
+```{r}
+
+# Sort the species from smallest to biggest with respect to their 
+# average bill length in cm
+
+penguins |> 
+   mutate(bill_length_cm = bill_length_mm/10) |>
+  group_by(species) |>
+  summarize(avg_bill_length_cm = mean(bill_length_cm, na.rm = TRUE)) |>
+  arrange(desc(avg_bill_length_cm))
+
+
+```
+
+```{r}
+
+
+# Example 3: Interpret Code
+# practice reading and making sense of somebody else’s code. What do you think this produces?
+ # I believe this produces a data frame of the minimum, maximum and rang of body masses of the penguins in the Chinstrap species, with groupings for each sex. 
+# How many columns? Rows?
+# 4 columns and 2 rows
+# What are the column names?
+# sex + the new min max and range
+# What’s represented in each row?
+# Sexes of the chinstrap penguin
+# Once you’ve thought about it, put the code inside a chunk and run it!
+
+
+
+
+
+```
+```{r}
+
+ penguins |>
+  filter(species == "Chinstrap") |> 
+  group_by(sex) |> 
+  summarize(min =   min(body_mass_g), max = max(body_mass_g)) |> 
+  mutate(range = max - min)
+
+
+
+```
+
+symbol	meaning
+==	equal to
+!=	not equal to
+>	greater than
+>=	greater than or equal to
+<	less than
+<=	less than or equal to
+%in% c(***, ***)	a list of multiple values
+
+
+```{r}
+
+# Create a dataset with just Adelie and Chinstrap using %in%
+# Pipe this into `count(species)` to confirm that you only have these 2 species
+ penguins |> 
+   filter( species %in% c("Adelie", "Chinstrap")) |> 
+   count(species)
+
+
+```
+```{r}
+
+# Create a dataset with just Adelie and Chinstrap using !=
+# Pipe this into `count(species)` to confirm that you only have these 2 species
+
+ penguins |> 
+ filter(species != "Gentoo") |> 
+  count(species)
+
+```
+
+```{r}
+
+head(penguins)
+
+
+```
+
+```{r}
+
+# NOTE the use of is.na()
+penguins |> 
+  summarize(sum(is.na(body_mass_g)))
+
+```
+
+```{r}
+
+
+# NOTE the use of is.na()
+penguins_w_body_mass <- penguins |> 
+  filter(!is.na(body_mass_g))
+
+# Compare the number of penguins in this vs the original data
+nrow(penguins_w_body_mass)
+
+
+```
+```{r}
+
+nrow(penguins)
+
+```
+
+```{r}
+
+penguins_complete <- penguins |> 
+  na.omit()
+
+```
+
+```{r}
+
+nrow(penguins_complete)
+nrow(penguins)
+
+```
+it eliminated 11 penguins.
+
+na.omit should be used in extreme circumstances where we need all the observations from a row. We should use this sparingly because it eliminates a lot of rows.
+
+
+Here are some shortcuts:
+
+- removes a given variable and keeps all others (e.g. select(-island))
+starts_with("___"), ends_with("___"), or contains("___") selects only the columns that either start with, end with, or simply contain the given string of characters
+
+```{r}
+
+# First: recall the variable names
+names(penguins)
+
+```
+
+```{r}
+
+penguins |>
+  select(-year, -island)
+  
+
+
+```
+
+```{r}
+# Use a shortcut to keep only species and the penguin characteristics measured in mm
+
+penguins |>
+  select(species, contains("mm"))
+
+```
+
+```{r}
+
+penguins |>
+  select(species, contains("bill")) 
+  
+
+
+```
+
+
+```{r}
+
+penguins |>
+  select(species, contains("length"))
+
+
+```
+
+
+```{r}
+
+# Change this code to sort the penguins by species, and then island name
+# NOTE: The first row should be an Adelie penguin living on Biscoe island
+penguins |> 
+  arrange(species, island)
+
+
+```
+
+```{r}
+
+# Change this code to count the number of male/female penguins observed for each species
+penguins |> 
+  count(species, sex)
+
+
+
+```
+
+```{r}
+
+
+# Change this code to calculate the average body mass by species and sex
+penguins |> 
+  group_by(species, sex) |> 
+  summarize(mean = mean(body_mass_g, na.rm = TRUE))
+
+
+```
+
+```{r}
+
+# Get today's date
+as.Date(today())
+
+
+```
+```{r}
+
+
+# Let's store this as "today" so we can work with it below
+today <- as.Date(today())
+
+# Check out the class of this object
+class(today)
+
+```
+```{r}
+
+year(today)
+
+```
+```{r}
+
+# What do these lines produce / what's their difference?
+month(today)
+
+
+```
+
+```{r}
+
+month(today, label = TRUE)
+
+
+```
+The difference is that the second produces the name of the month because of the enabled label.
+
+
+```{r}
+
+# What does this number mean?
+week(today)
+
+
+```
+This represents the week of the year as a number (12th week of the year)
+
+```{r}
+
+# What do these lines produce / what's their difference?
+mday(today)
+
+# This line produces the day of the month
+```
+```{r}
+
+yday(today)  # This is often called the "Julian day"
+#This produces the day of the year
+
+```
+
+```{r}
+
+# Day of the week as a number or label
+wday(today)
+
+#This produces the day of the week as a number
+```
+```{r}
+
+wday(today, label = TRUE)
+#produces the day of the week as a label
+```
+
+```{r}
+
+# What do the results of these 2 lines tell us?
+today >= ymd("2024-02-14")
+
+#These lines tell us whether today is past before or during a certain date
+```
+
+```{r}
+
+today < ymd("2024-02-14")
+
+
+```
+
+```{r}
+
+library(mosaic)
+data("Birthdays")
+head(Birthdays)
+
+
+```
+
+
+```{r}
+# How many days of data do we have for each state?
+Birthdays |>
+count( date) |>
+  nrow()
+  
+#There are 7,305 days of data for each state
+ 
+
+
+```
+
+
+
+
+
+
+```{r}
+
+
+
+
+  
+
+# How many total births were there in this time period?
+Birthdays |>
+  summarize(total_births = sum(births)) 
+
+# How many total births were there per state in this time period, sorted from low to high?
+
+Birthdays |>
+  group_by(state) |>
+  summarize(total_births = sum(births))  |>
+  arrange(total_births)
+
+
+  
+
+```
+
