@@ -3,3 +3,154 @@ title: "Univariate Viz"
 ---
 
 Use this file for practice with the **univariate viz** in-class activity.  Refer to the class website for details.
+
+# Load the package
+library(tidyverse)
+# Load the package
+library(tidyverse)
+
+
+
+library(tidyverse)
+# after adding ggplot(hikes, aes(x = rating)) + 
+#+       geombar() the count of each difficulty level was added. also the difficulties have been in alphabetical order
+# after adding ggplot(hikes, aes(x = rating)) +
+#+     geombar() +
+#      labs(x = "Rating", y = "Number of hikes") the plot now has labels for its axis
+
+# after adding ggplot(hikes, aes(x = rating)) +
+#+     geom_bar(fill = "blue") +
+#+     labs(x = "Rating", y = "Number of hikes")
+# the bars on the plot are now blue
+# after adding ggplot(hikes, aes(x = rating)) +
+#+     geom_bar(color = "orange", fill = "blue") +
+#+     labs(x = "Rating", y = "Number of hikes")
+# the borders of the bars on the plot are now orange
+
+#AFTER ADDING  ggplot(hikes, aes(x = rating)) +
+#+     geom_bar(color = "orange", fill = "blue")  +
+#+     labs(x = "Rating", y = "Number of hikes") +
+#+     theme_minimal()
+# the plot now has lines extending from the axis into the plot. I am not good at describing, it is very much in the same spirit of a waffle thematically
+#The plot with x as the quantitative variable representing Elevation may not be effective becasue the graph has very extremely thin bars and you cannot see the exact elevation number
+#The change in the code is that instead of geom_bar it is now using geom_histogram() 
+#The code has now added the color white for the histogram to use which creates the lines that extend from the axis and provides measurements. 
+#now the histogram's bars are filled with blue, the structure is pretty much the same aside from the previously mentioned change
+#The code has subtracted the part where the bars are filld with the blue color, there are now labels for the axis
+#The binwidth is changed to 1000. Wow this is awesome! 
+#The bins are now changed to the width of 5! The lines are as thin as hair!
+#The bin width is now 200. This is a very pleasant on the eyes and looks like a normal histogram.
+
+#IMPORTANT NOTE: I was using the console to note my work when I should have used this because the console does not save. Below i have included the commands i use.
+
+
+```{r}
+
+# Load the package
+library(tidyverse)
+
+# Import data
+hikes <- read.csv("https://mac-stat.github.io/data/high_peaks.csv")
+
+head(hikes)
+
+# Use the ggplot function
+ggplot(hikes, aes(x = rating))
+
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = rating)) +
+  geom_bar()
+
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = rating)) +
+  geom_bar() +
+  labs(x = "Rating", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(fill = "blue") +
+  labs(x = "Rating", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(color = "orange", fill = "blue") +
+  labs(x = "Rating", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = rating)) +
+  geom_bar(color = "orange", fill = "blue")  +
+  labs(x = "Rating", y = "Number of hikes") +
+  theme_minimal()
+
+ggplot(hikes, aes(x = elevation))
+
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram()
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white") 
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white", fill = "blue") 
+
+
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white") +
+  labs(x = "Elevation (feet)", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white", binwidth = 1000) +
+  labs(x = "Elevation (feet)", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white", binwidth = 5) +
+  labs(x = "Elevation (feet)", y = "Number of hikes")
+
+# COMMENT on the change in the code and the corresponding change in the plot
+ggplot(hikes, aes(x = elevation)) +
+  geom_histogram(color = "white", binwidth = 200) +
+  labs(x = "Elevation (feet)", y = "Number of hikes")
+
+
+
+
+```
+```{r}
+ggplot(hikes, aes(x = elevation)) +
+  geom_density()
+```
+
+ggplot(hikes, aes(x = elevation)) +
+  geom_density()
+  ggplot(hikes, aes(x = elevation)) +
+  geom_density()
+  
+  ggplot(hikes, aes(x = elevation)) +
+  geom_density()
+  
+  
+  
+```{r}
+
+ggplot(hikes, aes(x = elevation)) +
+  geom_density(color= "blue" , fill= "orange" )
+
+
+
+
+```
+
+
+Good note: make a line break after each + and an indent after the first line of code
+
+recovered ica 1

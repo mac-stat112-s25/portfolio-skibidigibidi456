@@ -1,0 +1,258 @@
+---
+title: "ica-reshaping"
+format: html
+---
+
+```{r}
+
+library(tidyverse)
+penguins <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
+
+
+```
+```{r}
+
+#Tally up the number of male/female penguins by species in 2 ways:
+# Using count()
+penguins |> 
+  count(sex, species)
+
+# Using group_by() and summarize()
+penguins |>
+  group_by(sex, species) |>
+  summarise(n())
+
+
+```
+Define a new column that includes the proportion or relative frequencies of male/female penguins in each species.
+
+```{r}
+#calculates the proportion of of each species that is a sex
+
+penguins |> 
+  group_by(species, sex) |> 
+  summarize(n = n()) |> 
+  mutate(proportion = n / sum(n))
+
+
+
+```
+
+
+We can’t do this by adjusting our count() code, but can adjust the group_by() and summarize() code since it’s still tracking the group categories in the background.
+Does the order of species and sex in group_by() matter?
+
+
+
+
+
+```{r}
+# calculating the proportion of species within each sex of penguins
+# Changing the order calculates the proportion of species within each sex
+penguins |> 
+  group_by(sex, species) |> 
+  summarize(n = n()) |> 
+  mutate(proportion = n / sum(n))
+
+```
+
+
+
+```{r}
+
+#This code will create a data set that shows the average body mass of penguins, grouped by sex and species, it will not facor in penguins whos body mass is not shown, or that otherwise have n/a in their data
+penguin_avg <- penguins |> 
+  group_by(species, sex) |> 
+  summarize(avg_body_mass = mean(body_mass_g, na.rm = TRUE)) |> 
+  na.omit()
+
+
+```
+
+
+```{r}
+
+# Did the reshaping process change the units of observation?
+# Units of observation = penguins
+head(penguins)
+
+
+
+```
+```{r}
+
+# Units of observation = species/sex combinations of penguins
+head(penguin_avg)
+
+
+```
+
+```{r}
+
+
+# Did the reshaping process result in any information loss from the original data?
+# We can no longer see many of the exact measuresments, we just have the combos of species and sex across the penguins with even the N/A penguins factored out.
+
+
+```
+
+
+
+```{r}
+
+# There are two general types of reshaped data:
+
+# aggregate data
+# For example, using group_by() with summarize() gains aggregate information about our observations but loses data on individual observations.
+
+# raw data, reshaped
+# We often want to retain all information on individual observations, but need to reshape it in order to perform the task at hand.
+
+
+
+
+```
+
+
+```{r}
+
+
+# Let’s calculate the difference in average body mass, male vs female, for each species. Since penguin_avg is small, we could do these calculations by hand. But this doesn’t scale up to bigger datasets.
+
+
+
+# Sketch out (on paper, in your head, anything) how this data would need to be reshaped, without losing any information, in order to calculate the differences in average body mass using our wrangling verbs. Make it as specific as possible, with column labels, entries, correct numbers, etc.
+
+# Identify the units of observation.
+# Units of observation would still be the species/sex combos I think. I guess to make this data set you would mutate to create a new row that represents male-female or female - male or you could create a new column for the differences between the two
+
+```
+
+```{r}
+
+penguin_avg
+
+
+```
+
+Making our data longer or wider reshapes the data, changing the units of observation while retaining all raw information:
+
+Make the data longer, i.e. combine values from multiple variables into 1 variable. Example: 1999 and 2000 represent two years. We want to combine their results into 1 variable without losing any information.
+# ____________________________________________________________________________________
+Make the data wider, i.e. spread out the values across new variables. Example: cases and pop represent two categories within type. To compare or combine their count outcomes side-by-side, we can separate them into their own variables.
+
+penguin_avg
+```{r}
+
+penguin_avg
+
+
+```
+With the goal of being able to calculate the difference in average body mass, male vs female, for each species, let’s make the dataset wider. That is, let’s get one row per species with separate columns for the average body mass by sex. Put this code into a chunk and run it:
+
+```{r}
+
+penguin_avg |> 
+pivot_wider(names_from = sex, values_from = avg_body_mass)
+
+```
+names_from = the variable whose values we want to separate into their own columns, i.e. where we want to get the new column names from
+values_from = which variable to take the new column values from
+
+
+FOLLOW-UP:
+
+What are the units of observation? Species
+Did we lose any information when we widened the data? No
+Use the wide data to calculate the difference in average body mass, male vs female, for each species. 
+
+```{r}
+
+penguin_avg |> 
+  pivot_wider(names_from = sex, values_from = avg_body_mass) |> 
+  mutate(diff = male - female)
+
+```
+
+```{r}
+
+penguin_avg_wide <- penguin_avg |> 
+  pivot_wider(names_from = sex, values_from = avg_body_mass)
+
+penguin_avg_wide
+
+
+```
+
+```{r}
+
+# We can either communicate which variables we WANT to collect into a single column (female, male)
+penguin_avg_wide |> 
+  pivot_longer(cols = c(female, male), names_to = "sex", values_to = "avg_body_mass")
+
+
+```
+
+
+```{r}
+
+# Or which variable(s) we do NOT want to collect into a single column (sex)
+penguin_avg_wide |> 
+  pivot_longer(cols = -species, names_to = "sex", values_to = "avg_body_mass")
+
+
+```
+
+
+Pivot Longer
+
+cols = the columns (variables) to collect into a single, new variable. We can also specify what variables we don’t want to collect
+names_to = the name of the new variable which will include the names or labels of the collected variables
+
+values_to = the name of the new variable which will include the values of the collected variables
+
+
+
+FOLLOW-UP:
+
+What are the units of observation? Species
+Did we lose any information when we lengthened the data? No
+Why did we put the variables in quotes “” here but not when we used pivot_wider()?
+Because when we were using pivot wider we were not creating new columns for the variables. Idk I think thats right.
+
+
+```{r}
+
+
+food <- data.frame(
+  customer = rep(c("A", "B"), each = 3),
+  restaurant = rep(c("Shish", "FrenchMeadow", "DunnBros"), 2),
+  order = c("falafel", "salad", "coffee", "baklava", "pastry", "tea")
+)
+food
+
+
+```
+
+```{r}
+
+more_food <- data.frame(
+  customer = c("C", "D"),
+  Shish = c("coffee", "maza"),
+  FrenchMeadow = c("soup", "sandwich"),
+  DunnBros = c("cookie", "coffee")
+)
+more_food
+
+
+```
+
+```{r}
+
+#Wrangle this data so that the 3 restaurant columns are combined into 1, hence the units of observation are customer / restaurant combinations.
+
+more_food |>
+ pivot_longer(cols = c("Shish", "FrenchMeadow", "DunnBros"), names_to = "restauant")
+              
+```
+

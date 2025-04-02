@@ -4,7 +4,7 @@ project:
 
 book:
   title: "COMP/STAT112 Notebook"
-  author: "Your Name Here"
+  author: "Torrey Fosmo Johnson"
   date: today
   reader-mode: true
   page-navigation: true
@@ -13,7 +13,7 @@ book:
   
   
   sidebar:
-    title: "Your Name Here"
+    title: "Torrey Fosmo Johnson"
     collapse-level: 2
     style: "docked"
     pinned: true
@@ -37,6 +37,11 @@ book:
       - ica/ica-bi.qmd
       - ica/ica-multi.qmd
       - ica/ica-spatial.qmd
+      - ica/quarto-demo.qmd
+      - ica/ica-effective.qmd
+      - ica/ica-wrangling.qmd
+      - ica/ica-dates.qmd
+      - ica/ica-reshaping.qmd
 
 format:
   html:
@@ -51,7 +56,7 @@ format:
     code-link: true
     code-line-numbers: true
     code-tools: true
-
+ 
 execute:
   cache: false
   freeze: auto
@@ -59,3 +64,5 @@ execute:
 editor: 
   markdown:
     wrap: sentence # Forces each sentence to be on its own line in source markdown, however, it doesn't affect how it is rendered
+
+recovered 
