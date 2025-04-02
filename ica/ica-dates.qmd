@@ -465,3 +465,6 @@ Birthdays |>
 
 ```
 
+
+
+Creating a new dataset (exercise 6)
